@@ -63,8 +63,8 @@ const getResources = (html, origin, folderPath) => {
     nodes
       .filter(({ url }) => isLocal(url, origin))
       .forEach(({ node, url }) => {
-        console.log(url.href, url);
-        const resourcePath = buildResourcePath(folderPath, url.href);
+        const { hostname, pathname } = url;
+        const resourcePath = buildResourcePath(folderPath, `${hostname}${pathname}`);
         console.log(resourcePath);
         $(node).attr(attribute, resourcePath);
         resources.push({
@@ -88,10 +88,12 @@ const createFileFolder = (path) => (
 );
 
 const downloadPage = (link, output = '.') => {
-  const htmlPath = buildHtmlPath(output, link);
-  const fileFolderName = buildFileFolderName(link);
+  const { hostname, pathname, origin } = parse(link);
+  const parsedUrl = `${hostname}${pathname}`;
+  const htmlPath = buildHtmlPath(output, parsedUrl);
+
+  const fileFolderName = buildFileFolderName(parsedUrl);
   const fileFolderPath = join(output, fileFolderName);
-  const parsedUrl = parse(link);
   let data;
 
   debug(`Creating ${fileFolderPath} folder for files`);
@@ -104,7 +106,7 @@ const downloadPage = (link, output = '.') => {
     .then((content) => {
       debug('Html was successfully downloaded');
       debug('Preparing assets');
-      data = getResources(content, parsedUrl.origin, fileFolderName);
+      data = getResources(content, origin, fileFolderName);
       const tasks = new Listr(data.resources.map(({ url, path }) => ({
         title: `Download ${url.href} to ${path}`,
         task: () => saveResource(url.href, join(output, path)),

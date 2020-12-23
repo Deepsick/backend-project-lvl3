@@ -5,6 +5,7 @@ import { dirname, join } from 'path';
 import nock from 'nock';
 import downloadPage from '../index.js';
 import { buildFileFolderName, buildHtmlPath } from '../src/utils.js';
+import { parse } from '../src/url.js';
 
 const {
   mkdtemp,
@@ -39,8 +40,10 @@ beforeAll(nock.disableNetConnect);
 
 beforeEach(async () => {
   dirPath = await mkdtemp(join(os.tmpdir(), 'page-loader-'));
-  htmlFilePath = buildHtmlPath(dirPath, URL);
-  const fileFolderName = buildFileFolderName(URL);
+  const { hostname, pathname } = parse(URL);
+  const parsedUrl = `${hostname}${pathname}`;
+  htmlFilePath = buildHtmlPath(dirPath, parsedUrl);
+  const fileFolderName = buildFileFolderName(parsedUrl);
   fileFolderPath = join(dirPath, fileFolderName);
 
   const resourcesPath = getFixturePath('resources');
