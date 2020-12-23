@@ -85,7 +85,6 @@ describe('Page loader', () => {
   test('Should work correctly for predefined output folder', async () => {
     await downloadPage(URL, dirPath);
     await expect(isExist(htmlFilePath)).resolves.not.toThrow();
-    console.log(fileFolderPath);
     await expect(isExist(fileFolderPath)).resolves.not.toThrow();
     const resources = await readdir(fileFolderPath);
     expect(resources.length).toBe(resourcesCount);

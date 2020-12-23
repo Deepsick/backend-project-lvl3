@@ -65,7 +65,6 @@ const getResources = (html, origin, folderPath) => {
       .forEach(({ node, url }) => {
         const { hostname, pathname } = url;
         const resourcePath = buildResourcePath(folderPath, `${hostname}${pathname}`);
-        console.log(resourcePath);
         $(node).attr(attribute, resourcePath);
         resources.push({
           path: resourcePath,

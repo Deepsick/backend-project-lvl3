@@ -10,4 +10,10 @@ export const buildResourcePath = (folder, filePath) => {
 };
 
 export const buildHtmlPath = (output, origin) => path.join(output, `${format(origin)}.html`);
-export const buildFileFolderName = (origin, postfix = '_files') => `${format(origin)}${postfix}`;
+export const buildFileFolderName = (origin, postfix = '_files') => {
+  const url = origin
+    .split('/')
+    .filter((route) => route)
+    .join('/');
+  return `${format(url)}${postfix}`;
+};
