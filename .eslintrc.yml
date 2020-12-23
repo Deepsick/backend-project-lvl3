@@ -1,0 +1,18 @@
+ 
+env:
+  node: true
+  jest: true
+  es2020: true
+
+extends:
+  - 'airbnb-base'
+
+parserOptions:
+  ecmaVersion: 2020
+  sourceType: 'module'
+
+rules:
+  no-console: 0
+  import/extensions: 0
+  no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }]
+  no-bitwise: 0

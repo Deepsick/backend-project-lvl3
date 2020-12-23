@@ -1,0 +1,49 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "Download page and all related resources",
+  "main": "index.js",
+  "bin": {
+    "page-loader": "bin/page-loader.js"
+  },
+  "scripts": {
+    "test": "npx -n --experimental-vm-modules jest"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=13.14.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deepsick/backend-project-lvl3.git"
+  },
+  "keywords": [
+    "scraping",
+    "page-loader",
+    "cli"
+  ],
+  "author": "Deepsick",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Deepsick/backend-project-lvl3/issues"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "homepage": "https://github.com/Deepsick/backend-project-lvl3#readme",
+  "devDependencies": {
+    "eslint": "7.15.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-plugin-import": "2.22.1",
+    "jest": "26.6.3",
+    "nock": "13.0.5"
+  },
+  "dependencies": {
+    "axios": "0.21.0",
+    "axios-debug-log": "0.8.2",
+    "cheerio": "1.0.0-rc.3",
+    "commander": "6.2.0",
+    "debug": "4.3.1",
+    "listr": "0.14.3"
+  }
+}
