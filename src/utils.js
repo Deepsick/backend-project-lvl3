@@ -6,6 +6,7 @@ const format = (url) => {
 };
 
 export const buildResourcePath = (folder, filePath) => {
+  console.log(filePath);
   const extension = path.extname(filePath);
   const fileName = filePath.split('.').slice(0, -1).join('.');
   return path.join(folder, `${format(fileName)}${extension}`);

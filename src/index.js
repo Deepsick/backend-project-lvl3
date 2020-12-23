@@ -63,7 +63,9 @@ const getResources = (html, origin, folderPath) => {
     nodes
       .filter(({ url }) => isLocal(url, origin))
       .forEach(({ node, url }) => {
+        console.log(url.href, url);
         const resourcePath = buildResourcePath(folderPath, url.href);
+        console.log(resourcePath);
         $(node).attr(attribute, resourcePath);
         resources.push({
           path: resourcePath,
