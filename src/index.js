@@ -29,6 +29,7 @@ const loadResponse = (url) => (
 );
 
 const saveToFile = (content, filePath) => writeFile(filePath, content);
+const createFileFolder = (path) => mkdir(path);
 
 const saveResource = (url, path) => (
   loadResponse(url)
@@ -76,7 +77,6 @@ const getResources = (html, origin, folderPath) => {
   };
 };
 
-const createFileFolder = (path) => mkdir(path);
 
 const downloadPage = (link, output = '.') => {
   const { hostname, pathname, origin } = parse(link);
@@ -87,10 +87,9 @@ const downloadPage = (link, output = '.') => {
   const fileFolderPath = join(output, fileFolderName);
   let data;
 
-  debug(`Creating ${fileFolderPath} folder for files`);
   return createFileFolder(fileFolderPath)
     .then(() => {
-      debug('File folder Created');
+      debug(`File ${fileFolderPath}  folder Created`);
       debug(`Downloading html from ${link}`);
       return loadResponse(link);
     })

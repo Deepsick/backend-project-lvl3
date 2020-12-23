@@ -91,6 +91,10 @@ describe('Page loader', () => {
   });
 
   describe('File system errors', () => {
+    test('Should throw EACCES error if folder access is restricted', async () => {
+      await expect(downloadPage(URL, '/sys')).rejects.toThrow('EACCES');
+    });
+
     test('Should throw ENOENT error if folder doesn"t exist', async () => {
       await expect(downloadPage(URL, getFixturePath('notExitingFolder'))).rejects.toThrow('ENOENT');
     });
