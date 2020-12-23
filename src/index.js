@@ -16,12 +16,9 @@ import {
 } from './utils.js';
 
 const {
-  access,
   mkdir,
-  rmdir,
   writeFile,
 } = fs.promises;
-const { constants } = fs;
 const debug = createDebug('page-loader');
 
 const loadResponse = (url) => (
@@ -79,12 +76,7 @@ const getResources = (html, origin, folderPath) => {
   };
 };
 
-const createFileFolder = (path) => (
-  access(path, constants.F_OK | constants.W_OK)
-    .then(() => rmdir(path, { recursive: true, force: true }))
-    .then(() => mkdir(path))
-    .catch(() => mkdir(path))
-);
+const createFileFolder = (path) => mkdir(path);
 
 const downloadPage = (link, output = '.') => {
   const { hostname, pathname, origin } = parse(link);
