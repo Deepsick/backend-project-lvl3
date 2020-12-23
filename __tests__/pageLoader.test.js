@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import nock from 'nock';
 import downloadPage from '../index.js';
-import { buildFileFolderPath, buildHtmlPath } from '../src/utils.js';
+import { buildFileFolderName, buildHtmlPath } from '../src/utils.js';
 
 const {
   mkdtemp,
@@ -40,7 +40,8 @@ beforeAll(nock.disableNetConnect);
 beforeEach(async () => {
   dirPath = await mkdtemp(join(os.tmpdir(), 'page-loader-'));
   htmlFilePath = buildHtmlPath(dirPath, URL);
-  fileFolderPath = buildFileFolderPath(dirPath, URL);
+  const fileFolderName = buildFileFolderName(URL);
+  fileFolderPath = join(dirPath, fileFolderName);
 
   const resourcesPath = getFixturePath('resources');
   resourcesCount = (await readdir(resourcesPath)).length;
@@ -81,6 +82,7 @@ describe('Page loader', () => {
   test('Should work correctly for predefined output folder', async () => {
     await downloadPage(URL, dirPath);
     await expect(isExist(htmlFilePath)).resolves.not.toThrow();
+    console.log(fileFolderPath);
     await expect(isExist(fileFolderPath)).resolves.not.toThrow();
     const resources = await readdir(fileFolderPath);
     expect(resources.length).toBe(resourcesCount);

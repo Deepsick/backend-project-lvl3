@@ -1,5 +1,6 @@
 import 'axios-debug-log';
 import fs from 'fs';
+import { join } from 'path';
 import Listr from 'listr';
 import cheerio from 'cheerio';
 import axios from 'axios';
@@ -11,7 +12,7 @@ import {
 import {
   buildResourcePath,
   buildHtmlPath,
-  buildFileFolderPath,
+  buildFileFolderName,
 } from './utils.js';
 
 const {
@@ -86,7 +87,8 @@ const createFileFolder = (path) => (
 
 const downloadPage = (link, output = '.') => {
   const htmlPath = buildHtmlPath(output, link);
-  const fileFolderPath = buildFileFolderPath(output, link);
+  const fileFolderName = buildFileFolderName(link);
+  const fileFolderPath = join(output, fileFolderName);
   const parsedUrl = parse(link);
   let data;
 
@@ -100,10 +102,10 @@ const downloadPage = (link, output = '.') => {
     .then((content) => {
       debug('Html was successfully downloaded');
       debug('Preparing assets');
-      data = getResources(content, parsedUrl.origin, fileFolderPath);
+      data = getResources(content, parsedUrl.origin, fileFolderName);
       const tasks = new Listr(data.resources.map(({ url, path }) => ({
         title: `Download ${url.href} to ${path}`,
-        task: () => saveResource(url.href, path),
+        task: () => saveResource(url.href, join(output, path)),
       })), { concurrent: true });
       const saveHtmlTask = saveToFile(data.html, htmlPath);
 

@@ -8,8 +8,8 @@ const format = (url) => {
 export const buildResourcePath = (folder, filePath) => {
   const extension = path.extname(filePath);
   const fileName = filePath.split('.').slice(0, -1).join('.');
-  return `${folder}/${format(fileName)}${extension}`;
+  return path.join(folder, `${format(fileName)}${extension}`);
 };
 
-export const buildHtmlPath = (output, origin) => `${output}/${format(origin)}.html`;
-export const buildFileFolderPath = (output, origin) => `${output}/${format(origin)}_files`;
+export const buildHtmlPath = (output, origin) => path.join(output, `${format(origin)}.html`);
+export const buildFileFolderName = (origin) => `${format(origin)}_files`;
