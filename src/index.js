@@ -87,6 +87,7 @@ const createFileFolder = (path) => (
 const downloadPage = (link, output = '.') => {
   const htmlPath = buildHtmlPath(output, link);
   const fileFolderPath = buildFileFolderPath(output, link);
+  const parsedUrl = parse(link);
   let data;
 
   debug(`Creating ${fileFolderPath} folder for files`);
@@ -99,7 +100,7 @@ const downloadPage = (link, output = '.') => {
     .then((content) => {
       debug('Html was successfully downloaded');
       debug('Preparing assets');
-      data = getResources(content, link, fileFolderPath);
+      data = getResources(content, parsedUrl.origin, fileFolderPath);
       const tasks = new Listr(data.resources.map(({ url, path }) => ({
         title: `Download ${url.href} to ${path}`,
         task: () => saveResource(url.href, path),
@@ -108,8 +109,7 @@ const downloadPage = (link, output = '.') => {
 
       debug('Downloading assets');
       return Promise
-        .all([tasks.run(), saveHtmlTask])
-        .catch((error) => console.error(error));
+        .all([tasks.run(), saveHtmlTask]);
     })
     .then(() => {
       debug('All resources are downloaded');
