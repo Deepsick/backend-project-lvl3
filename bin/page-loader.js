@@ -8,6 +8,8 @@ program
   .arguments('<url>')
   .option('-o, --output [path]', 'output folder path', '.')
   .action((url) => {
-    downloadPage(url, program.output);
+    downloadPage(url, program.output)
+      .then((path) => console.log(path))
+      .catch((error) => console.error(error));
   })
   .parse(process.argv);

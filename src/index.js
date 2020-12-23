@@ -77,7 +77,6 @@ const getResources = (html, origin, folderPath) => {
   };
 };
 
-
 const downloadPage = (link, output = '.') => {
   const { hostname, pathname, origin } = parse(link);
   const parsedUrl = `${hostname}${pathname}`;
@@ -87,6 +86,7 @@ const downloadPage = (link, output = '.') => {
   const fileFolderPath = join(output, fileFolderName);
   let data;
 
+  debug(`Creating ${fileFolderPath} folder for files`);
   return createFileFolder(fileFolderPath)
     .then(() => {
       debug(`File ${fileFolderPath}  folder Created`);
