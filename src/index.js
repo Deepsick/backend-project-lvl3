@@ -14,8 +14,6 @@ import {
   buildFileFolderPath,
 } from './utils.js';
 
-const FILE_FORMAT = 'binary';
-
 const {
   access,
   mkdir,
@@ -26,14 +24,13 @@ const { constants } = fs;
 const debug = createDebug('page-loader');
 
 const loadResponse = (url) => (
-  axios.get(url)
+  axios.get(url, {
+    responseType: 'arraybuffer',
+  })
     .then((response) => response.data)
 );
 
-const saveToFile = (content, filePath) => (
-  writeFile(filePath, content, FILE_FORMAT)
-    .catch((error) => console.error(error))
-);
+const saveToFile = (content, filePath) => writeFile(filePath, content);
 
 const saveResource = (url, path) => (
   loadResponse(url)
@@ -47,7 +44,7 @@ const mapTagToAttribute = {
 };
 
 const getResources = (html, origin, folderPath) => {
-  const $ = cheerio.load(html);
+  const $ = cheerio.load(html, { decodeEntities: false });
   const resources = [];
 
   Object.keys(mapTagToAttribute).forEach((tag) => {
