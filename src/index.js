@@ -22,14 +22,15 @@ const {
 const debug = createDebug('page-loader');
 
 const loadResponse = (url) => (
-  axios.get(url, {
-    responseType: 'arraybuffer',
-  })
+  axios
+    .get(url, {
+      responseType: 'arraybuffer',
+    })
     .then((response) => response.data)
 );
 
 const saveToFile = (content, filePath) => writeFile(filePath, content);
-const createFileFolder = (path) => mkdir(path);
+const createFolder = (path) => mkdir(path);
 
 const saveResource = (url, path) => (
   loadResponse(url)
@@ -87,7 +88,7 @@ const downloadPage = (link, output = '.') => {
   let data;
 
   debug(`Creating ${fileFolderPath} folder for files`);
-  return createFileFolder(fileFolderPath)
+  return createFolder(fileFolderPath)
     .then(() => {
       debug(`File ${fileFolderPath}  folder Created`);
       debug(`Downloading html from ${link}`);
