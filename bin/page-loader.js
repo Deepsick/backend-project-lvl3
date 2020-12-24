@@ -10,6 +10,9 @@ program
   .action((url) => {
     downloadPage(url, program.output)
       .then((path) => console.log(path))
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        process.exit(1);
+      });
   })
   .parse(process.argv);
