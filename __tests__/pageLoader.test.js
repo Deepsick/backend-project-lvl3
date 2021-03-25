@@ -106,23 +106,29 @@ afterEach(async () => {
 afterAll(nock.restore);
 
 describe('Page loader', () => {
-  test('Should work correctly for predefined output folder', async () => {
-    const expectedHtml = await readFile(getFixturePath('expected.html'), 'utf8');
+  describe('Functionality', () => {
+    test('Should work correctly for predefined output folder', async () => {
+      const expectedHtml = await readFile(getFixturePath('expected.html'), 'utf8');
 
-    await downloadPage(URL, dirPath);
-    const html = await readFile(htmlFilePath, 'utf8');
-    const resources = await readdir(fileFolderPath);
+      await downloadPage(URL, dirPath);
+      const html = await readFile(htmlFilePath, 'utf8');
+      const resources = await readdir(fileFolderPath);
 
-    await expect(isExist(htmlFilePath)).resolves.not.toThrow();
-    await expect(isExist(fileFolderPath)).resolves.not.toThrow();
+      await expect(isExist(htmlFilePath)).resolves.not.toThrow();
+      await expect(isExist(fileFolderPath)).resolves.not.toThrow();
 
-    expect(resources.length).toBe(resourcesCount);
-    expect(html).toBe(expectedHtml);
-    for (const { fileName } of RESOURCES) {
-      const content = await readFile(join(fileFolderPath, fileName), 'utf8');
+      expect(resources.length).toBe(resourcesCount);
+      expect(html).toBe(expectedHtml);
+    });
+
+    test.each(RESOURCES.map(({ fileName }) => fileName))('Should process %s resource correctly', async (fileName) => {
       const expectedContent = await readFile(getResourcePath(fileName), 'utf8');
+
+      await downloadPage(URL, dirPath);
+
+      const content = await readFile(join(fileFolderPath, fileName), 'utf8');
       expect(content).toBe(expectedContent);
-    }
+    });
   });
 
   describe('File system errors', () => {
