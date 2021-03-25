@@ -71,7 +71,7 @@ const getResources = (html, originUrl, folderPath) => {
         });
       });
   });
-  
+
   return {
     html: $.html(),
     resources,

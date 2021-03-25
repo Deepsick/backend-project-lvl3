@@ -28,20 +28,20 @@ const URL = 'https://example.com';
 const ERROR_URL = 'https://error-example.com';
 const RESOURCES = [
   {
-    fileName: 'example-com-img.jpg',
+    fileName: 'example-com-resources-img.jpg',
     url: '/resources/img.jpg',
   },
   {
-    fileName: 'example-com-index.css',
+    fileName: 'example-com-resources-index.css',
     url: '/resources/index.css',
   },
   {
-    fileName: 'example-com-index.js',
+    fileName: 'example-com-resources-index.js',
     url: '/resources/index.js',
   },
   {
-    fileName: 'example-com-about.html',
-    url: '/resources/about',
+    fileName: 'example-com-resources-blog-about.html',
+    url: '/resources/blog/about',
   },
 ];
 
