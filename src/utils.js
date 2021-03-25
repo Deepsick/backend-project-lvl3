@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import path from 'path';
-import { parse } from './url';
+import { parse } from './url.js';
 
 const format = (url, replacer = '-') => url.replace(/[^a-zA-Z0-9]/g, replacer);
 
