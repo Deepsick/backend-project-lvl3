@@ -5,7 +5,7 @@ install-deps:
 	npm ci
 
 test:
-	DEBUG=nock* npm test
+	npm test
 
 test-coverage:
 	npm test -- --coverage --coverageProvider=v8

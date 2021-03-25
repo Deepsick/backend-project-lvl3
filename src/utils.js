@@ -10,5 +10,6 @@ export const buildName = (url, isFolder = false) => {
   const fullPath = path.join(hostname, name);
   const postfix = isFolder ? '_files' : (ext || '.html');
   const formatedName = format(fullPath);
+
   return `${formatedName}${postfix}`;
 };

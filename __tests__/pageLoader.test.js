@@ -39,6 +39,10 @@ const RESOURCES = [
     fileName: 'example-com-index.js',
     url: '/resources/index.js',
   },
+  {
+    fileName: 'example-com-about.html',
+    url: '/resources/about',
+  },
 ];
 
 const htmlFileName = 'example-com.html';
@@ -111,6 +115,7 @@ describe('Page loader', () => {
 
     await expect(isExist(htmlFilePath)).resolves.not.toThrow();
     await expect(isExist(fileFolderPath)).resolves.not.toThrow();
+
     expect(resources.length).toBe(resourcesCount);
     expect(html).toBe(expectedHtml);
     for (const { fileName } of RESOURCES) {
