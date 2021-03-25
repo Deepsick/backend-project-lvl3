@@ -1,19 +1,14 @@
+/* eslint-disable import/prefer-default-export */
 import path from 'path';
+import { parse } from './url';
 
-const format = (url) => url.replace(/[^a-zA-Z0-9]/g, '-');
+const format = (url, replacer = '-') => url.replace(/[^a-zA-Z0-9]/g, replacer);
 
-export const buildResourcePath = (folder, filePath) => {
-  const { dir, name, ext } = path.parse(filePath);
-  const postfix = ext || '.html';
-  const fileName = format(path.join(dir, name));
-  return path.join(folder, `${fileName}${postfix}`);
-};
-
-export const buildHtmlPath = (output, origin) => path.join(output, `${format(origin)}.html`);
-export const buildFileFolderName = (origin, postfix = '_files') => {
-  const url = origin
-    .split('/')
-    .filter((route) => route)
-    .join('/');
-  return `${format(url)}${postfix}`;
+export const buildName = (url, isFolder = false) => {
+  const { hostname, pathname } = parse(url);
+  const { name, ext } = path.parse(pathname);
+  const fullPath = path.join(hostname, name);
+  const postfix = isFolder ? '_files' : (ext || '.html');
+  const formatedName = format(fullPath);
+  return `${formatedName}${postfix}`;
 };

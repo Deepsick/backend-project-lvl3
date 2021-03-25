@@ -10,14 +10,13 @@ import {
   parse,
 } from './url.js';
 import {
-  buildResourcePath,
-  buildHtmlPath,
-  buildFileFolderName,
+  buildName,
 } from './utils.js';
 
 const {
   mkdir,
   writeFile,
+  access,
 } = fs.promises;
 const debug = createDebug('page-loader');
 
@@ -30,7 +29,7 @@ const loadResponse = (url) => (
 );
 
 const saveToFile = (content, filePath) => writeFile(filePath, content);
-const createFolder = (path) => mkdir(path);
+const createFolder = (path) => access(path).catch(() => mkdir(path));
 
 const saveResource = (url, path) => (
   loadResponse(url)
@@ -43,7 +42,8 @@ const mapTagToAttribute = {
   img: 'src',
 };
 
-const getResources = (html, origin, folderPath) => {
+const getResources = (html, originUrl, folderPath) => {
+  const { origin } = parse(originUrl);
   const $ = cheerio.load(html, { decodeEntities: false });
   const resources = [];
 
@@ -62,8 +62,8 @@ const getResources = (html, origin, folderPath) => {
     nodes
       .filter(({ url }) => isLocal(url, origin))
       .forEach(({ node, url }) => {
-        const { hostname, pathname } = url;
-        const resourcePath = buildResourcePath(folderPath, `${hostname}${pathname}`);
+        const fileName = buildName(url);
+        const resourcePath = join(folderPath, fileName);
         $(node).attr(attribute, resourcePath);
         resources.push({
           path: resourcePath,
@@ -78,12 +78,10 @@ const getResources = (html, origin, folderPath) => {
   };
 };
 
-const downloadPage = (link, output = '.') => {
-  const { hostname, pathname, origin } = parse(link);
-  const parsedUrl = `${hostname}${pathname}`;
-  const htmlPath = buildHtmlPath(output, parsedUrl);
-
-  const fileFolderName = buildFileFolderName(parsedUrl);
+const downloadPage = (link, output = process.cwd()) => {
+  const htmlName = buildName(link);
+  const htmlPath = join(output, htmlName);
+  const fileFolderName = buildName(link, true);
   const fileFolderPath = join(output, fileFolderName);
   let data;
 
@@ -97,7 +95,7 @@ const downloadPage = (link, output = '.') => {
     .then((content) => {
       debug('Html was successfully downloaded');
       debug('Preparing assets');
-      data = getResources(content, origin, fileFolderName);
+      data = getResources(content, link, fileFolderName);
       const tasks = new Listr(data.resources.map(({ url, path }) => ({
         title: `Download ${url.href} to ${path}`,
         task: () => saveResource(url.href, join(output, path)),

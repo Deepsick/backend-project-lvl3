@@ -6,7 +6,7 @@ program
   .description('Downloads html page with all its resources.')
   .version('1.0.0')
   .arguments('<url>')
-  .option('-o, --output [path]', 'output folder path', '.')
+  .option('-o, --output [path]', 'output folder path', process.cwd())
   .action((url) => {
     downloadPage(url, program.output)
       .then((path) => console.log(path))
