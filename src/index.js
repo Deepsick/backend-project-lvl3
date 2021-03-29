@@ -12,9 +12,7 @@ import {
   loadResponse,
 } from './utils.js';
 
-
 const debug = createDebug('page-loader');
-
 
 const mapTagToAttribute = {
   link: 'href',
