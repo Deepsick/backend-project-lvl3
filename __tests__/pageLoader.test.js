@@ -1,3 +1,4 @@
+import { constants as httpConstants } from 'http2';
 import os from 'os';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -54,12 +55,12 @@ let fileFolderPath;
 let resourcesCount;
 
 const mapStatusToRoute = {
-  500: 'server-error',
-  404: 'not-found',
-  401: 'unauthorized',
-  400: 'bad',
-  403: 'forbidden',
-  301: 'redirect',
+  [httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR]: 'server-error',
+  [httpConstants.HTTP_STATUS_NOT_FOUND]: 'not-found',
+  [httpConstants.HTTP_STATUS_UNAUTHORIZED]: 'unauthorized',
+  [httpConstants.HTTP_STATUS_BAD_REQUEST]: 'bad',
+  [httpConstants.HTTP_STATUS_FORBIDDEN]: 'forbidden',
+  [httpConstants.HTTP_STATUS_PERMANENT_REDIRECT]: 'redirect',
 };
 
 beforeAll(nock.disableNetConnect);
@@ -74,29 +75,29 @@ beforeEach(async () => {
   nock(URL)
     .persist()
     .get('/')
-    .replyWithFile(200, getFixturePath('initial.html'));
+    .replyWithFile(httpConstants.HTTP_STATUS_OK, getFixturePath('initial.html'));
 
   RESOURCES.forEach(({ fileName, url }) => {
     nock(URL)
       .persist()
       .get(url)
-      .replyWithFile(200, join(resourcesPath, fileName));
+      .replyWithFile(httpConstants.HTTP_STATUS_OK, join(resourcesPath, fileName));
   });
 
   nock(ERROR_URL)
     .persist()
     .get('/server-error')
-    .reply(500)
+    .reply(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
     .get('/not-found')
-    .reply(404)
+    .reply(httpConstants.HTTP_STATUS_NOT_FOUND)
     .get('/unauthorized')
-    .reply(401)
+    .reply(httpConstants.HTTP_STATUS_UNAUTHORIZED)
     .get('/bad')
-    .reply(400)
+    .reply(httpConstants.HTTP_STATUS_BAD_REQUEST)
     .get('/forbidden')
-    .reply(403)
+    .reply(httpConstants.HTTP_STATUS_FORBIDDEN)
     .get('/redirect')
-    .reply(301);
+    .reply(httpConstants.HTTP_STATUS_PERMANENT_REDIRECT);
 });
 
 afterEach(async () => {

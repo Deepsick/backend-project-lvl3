@@ -13,10 +13,15 @@ Make request to url, download page and its resources
 
 NodeJs packaging and dependency management tool ```npm``` should be preinstalled.
 
+### Local
 ```bash
 make install
 ```
 
+### Global
+```bash
+make link
+```
 
 ## Usage
 

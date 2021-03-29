@@ -1,40 +1,20 @@
-import 'axios-debug-log';
-import fs from 'fs';
 import { join } from 'path';
 import Listr from 'listr';
 import cheerio from 'cheerio';
-import axios from 'axios';
 import createDebug from 'debug';
 import {
+  buildName,
   isLocal,
   parse,
-} from './url.js';
-import {
-  buildName,
+  saveToFile,
+  saveResource,
+  createFolder,
+  loadResponse,
 } from './utils.js';
 
-const {
-  mkdir,
-  writeFile,
-  access,
-} = fs.promises;
+
 const debug = createDebug('page-loader');
 
-const loadResponse = (url) => (
-  axios
-    .get(url, {
-      responseType: 'arraybuffer',
-    })
-    .then((response) => response.data)
-);
-
-const saveToFile = (content, filePath) => writeFile(filePath, content);
-const createFolder = (path) => access(path).catch(() => mkdir(path));
-
-const saveResource = (url, path) => (
-  loadResponse(url)
-    .then((content) => saveToFile(content, path))
-);
 
 const mapTagToAttribute = {
   link: 'href',
@@ -83,7 +63,6 @@ const downloadPage = (link, output = process.cwd()) => {
   const htmlPath = join(output, htmlName);
   const fileFolderName = buildName(link, true);
   const fileFolderPath = join(output, fileFolderName);
-  let data;
 
   debug(`Creating ${fileFolderPath} folder for files`);
   return createFolder(fileFolderPath)
@@ -95,7 +74,7 @@ const downloadPage = (link, output = process.cwd()) => {
     .then((content) => {
       debug('Html was successfully downloaded');
       debug('Preparing assets');
-      data = getResources(content, link, fileFolderName);
+      const data = getResources(content, link, fileFolderName);
       const tasks = new Listr(data.resources.map(({ url, path }) => ({
         title: `Download ${url.href} to ${path}`,
         task: () => saveResource(url.href, join(output, path)),
